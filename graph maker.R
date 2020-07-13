@@ -8,30 +8,23 @@ setwd("C:/Users/Jaret/Documents/GitHub/Covid-19-Graph-Alert")
 
 yesterday = Sys.Date()-1
 first.file = as.Date("2020-01-22", "%Y-%m-%d")
-days.since.jan22 = yesterday-first.file
-rdat = data.frame()
 
+#Get all prior data from John Hopkins CSSE
+#We want up to yesterday's since we are going to run this in the morning, before the newest data has been published
 importCSV = function(date){
-  csvname = format(date, "%m-%d-%Y")
-  today.data = paste("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/", csvname, ".csv", sep="")
-  rdat = rdat + read.csv(today.data)
-  return()
+  newest.csvname = format(date, "%m-%d-%Y")
+  today.data = paste("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/", newest.csvname, ".csv", sep="")
+  date = read.csv(today.data)
+  return(date)
 }
 
-for (i in 1:days.since.jan22) {
-  importCSV(i)
+for (i in first.file:yesterday) {
+  i.date = as.Date(i, origin = "1970-01-01")
+  assign(paste("data-",i.date,sep=""),importCSV(i.date))
 }
-
-#Get yesterday's data from John Hopkins CSSE
-csvname = format(yesterday, "%m-%d-%Y")
-today.data = paste("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/", csvname, ".csv", sep="")
-rdat = read.csv(today.data)
 
 #Clean data
-rdat = subset(rdat, Active>=0)
-#Will add to this as I find errors in the data. 
 
 #Summary
-summary(rdat)
 
 #Graph Making
