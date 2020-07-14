@@ -15,16 +15,25 @@ first.file = as.Date("2020-01-22", "%Y-%m-%d")
 importCSV = function(date){
   newest.csvname = format(date, "%m-%d-%Y")
   today.data = paste("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/", newest.csvname, ".csv", sep="")
-  date = read.csv(today.data)
+  date = clean(read.csv(today.data))
   return(date)
+}
+#This function takes a date object in any format and creates a data.table object of the .csv for that date. It also cleans up the data.
+
+clean = function(dat){
+  if(is.null(dat$Active)) {
+    return(dat)
+  } else {
+    clean.dat = subset(dat, Active >= 0)
+    return(clean.dat)
+  }
 }
 
 for (i in first.file:yesterday) {
   i.date = as.Date(i, origin = "1970-01-01")
-  assign(paste("data-",i.date,sep=""),importCSV(i.date))
+  name.date = format(i.date, "%Y.%m.%d")
+  assign(paste("data.",name.date,sep=""),importCSV(i.date))
 }
-
-#Clean data
 
 #Summary
 
