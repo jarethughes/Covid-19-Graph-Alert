@@ -2,6 +2,7 @@
 #By: Jaret Hughes
 
 #Setup
+args = commandArgs(trailingOnly = TRUE)
 library(httr)
 setwd("C:/Users/Jaret/Documents/GitHub/Covid-19-Graph-Alert")
 #Name will vary depending on your setup, since this is running on my computer I am using this for now
